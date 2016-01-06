@@ -20,8 +20,6 @@ TRANSLATOR:
       - {action: accept, from: "vp[x89]_"}
       - {action: ignore, from: "vpx_codec_control_"}
       - {action: replace, from: "vpx_", to: _}
-    const: 
-      - {action: ignore, from: _INLINE$}
     type: 
       - {action: replace, from: "_t$"}
     function: 
