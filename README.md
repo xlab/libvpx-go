@@ -1,6 +1,8 @@
 libvpx-go
 =========
 
+**WARNING:** WIP; UNTESTED
+
 The package provides Go bindings for [libvpx](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
 All the binding code has automatically been generated with rules defined in [vpx.yml](/vpx.yml).
 
