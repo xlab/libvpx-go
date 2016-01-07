@@ -46,6 +46,14 @@ extern vpx_codec_iface_t  vpx_codec_vp9_dx_algo;
 extern vpx_codec_iface_t *vpx_codec_vp9_dx(void);
 /*!@} - end algorithm interface member group*/
 
+/*!\name Algorithm interface for VP10
+ *
+ * This interface provides the capability to decode VP10 streams.
+ * @{
+ */
+extern vpx_codec_iface_t  vpx_codec_vp10_dx_algo;
+extern vpx_codec_iface_t *vpx_codec_vp10_dx(void);
+/*!@} - end algorithm interface member group*/
 
 /*!\enum vp8_dec_control_id
  * \brief VP8 decoder control functions
@@ -106,6 +114,13 @@ enum vp8_dec_control_id {
    */
   VP9_INVERT_TILE_DECODE_ORDER,
 
+  /** control function to set the skip loop filter flag. Valid values are
+   * integers. The decoder will skip the loop filter when its value is set to
+   * nonzero. If the loop filter is skipped the decoder may accumulate decode
+   * artifacts. The default value is 0.
+   */
+  VP9_SET_SKIP_LOOP_FILTER,
+
   VP8_DECODER_CTRL_ID_MAX
 };
 
@@ -132,6 +147,7 @@ typedef struct vpx_decrypt_init {
 typedef vpx_decrypt_init vp8_decrypt_init;
 
 
+/*!\cond */
 /*!\brief VP8 decoder control function parameter type
  *
  * Defines the data types that VP8D control functions take. Note that
@@ -141,15 +157,25 @@ typedef vpx_decrypt_init vp8_decrypt_init;
 
 
 VPX_CTRL_USE_TYPE(VP8D_GET_LAST_REF_UPDATES,    int *)
+#define VPX_CTRL_VP8D_GET_LAST_REF_UPDATES
 VPX_CTRL_USE_TYPE(VP8D_GET_FRAME_CORRUPTED,     int *)
+#define VPX_CTRL_VP8D_GET_FRAME_CORRUPTED
 VPX_CTRL_USE_TYPE(VP8D_GET_LAST_REF_USED,       int *)
+#define VPX_CTRL_VP8D_GET_LAST_REF_USED
 VPX_CTRL_USE_TYPE(VPXD_SET_DECRYPTOR,           vpx_decrypt_init *)
+#define VPX_CTRL_VPXD_SET_DECRYPTOR
 VPX_CTRL_USE_TYPE(VP8D_SET_DECRYPTOR,           vpx_decrypt_init *)
+#define VPX_CTRL_VP8D_SET_DECRYPTOR
 VPX_CTRL_USE_TYPE(VP9D_GET_DISPLAY_SIZE,        int *)
+#define VPX_CTRL_VP9D_GET_DISPLAY_SIZE
 VPX_CTRL_USE_TYPE(VP9D_GET_BIT_DEPTH,           unsigned int *)
+#define VPX_CTRL_VP9D_GET_BIT_DEPTH
 VPX_CTRL_USE_TYPE(VP9D_GET_FRAME_SIZE,          int *)
+#define VPX_CTRL_VP9D_GET_FRAME_SIZE
 VPX_CTRL_USE_TYPE(VP9_INVERT_TILE_DECODE_ORDER, int)
+#define VPX_CTRL_VP9_INVERT_TILE_DECODE_ORDER
 
+/*!\endcond */
 /*! @} - end defgroup vp8_decoder */
 
 #ifdef __cplusplus
