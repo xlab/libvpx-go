@@ -9,22 +9,34 @@ GENERATOR:
 PARSER: 
   IncludePaths: [/usr/include]
   SourcesPaths: ["vpx/vpx-1.5.0/vpx_encoder.h", "vpx/vpx-1.5.0/vpx_decoder.h"]
+  Defines:
+    VP8_FOURCC: 0x30385056
+    VP9_FOURCC: 0x30395056
+    VP10_FOURCC: 0x303a5056
 
 TRANSLATOR: 
   ConstRules: 
     decl: expand
     enum: cgo
+  MemTips:
+    - {target: _codec_stream_info, self: bind}
+    - {target: _image, self: bind}
+    - {target: _codec_ctx, self: raw}
+  PtrTips:
+    function:
+      - {target: "_codec_get_cx_data$", tips: [ref,ref]}
+      - {target: "_codec_decode$", tips: [ref,arr,size,ref,0]}
+      - {target: "(?i)^(vpx|vp8|vp9)", tips: [ref,ref,ref,ref,ref,ref]} # defaults
   Rules: 
     global:
-      - {action: replace, from: "VPX_SCALING_MODE", to: "VPX_SCALING_MODE_TYPE"}
       - {transform: lower}
       - {action: accept, from: "(?i)^(vpx|vp8|vp9)"}
-      - {action: ignore, from: "vpx_codec_vp10_cx"} # private stuff
-      - {action: ignore, from: "vpx_codec_vp10_dx"} # private stuff
       - {action: ignore, from: "vpx_codec_control_"} # variadic
       - {action: replace, from: "^vpx_", to: _}
     function:
       - {action: replace, from: codec_error$, to: codec_get_error}
+    const:
+      - {action: replace, from: "VPX_SCALING_MODE", to: "VPX_SCALING_MODE_TYPE"}
     type:
       - {action: replace, from: "_t$"}
     private:
