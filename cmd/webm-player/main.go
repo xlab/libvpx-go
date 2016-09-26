@@ -15,13 +15,15 @@ import (
 )
 
 var webmInput = flag.String("webm", "video.webm", "Specify a .webm file to play")
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-var memprofile = flag.String("memprofile", "", "write memory profile to this file")
+var maxFps = flag.Int("fps", 30, "Limits the rendering FPS rate. Set this to 60fps for 720p60 videos")
 
 const appName = "WebM VP8/VP9 Player"
 
+var rateLimitDur time.Duration
+
 func init() {
 	flag.Parse()
+	rateLimitDur = time.Second / time.Duration(*maxFps)
 	runtime.LockOSThread()
 }
 
@@ -61,49 +63,61 @@ func main() {
 	// 	nk.NkStyleSetFont(ctx, sansFont.Handle())
 	// }
 
-	// Open WebM stream
+	// Open a WebM stream
 	in, err := os.Open(*webmInput)
 	if err != nil {
 		closer.Fatalln("webm:", err)
 	}
-	meta, vDec, aDec := webmStream(in, 0)
+	stream, err := NewStream(in)
+	if err != nil {
+		closer.Fatalln("webm:", err)
+	}
 	vOut := make(chan Frame, 64)
 	aOut := make(chan Samples, 64)
 
 	var view *View
-	if vtrack := meta.FindFirstVideoTrack(); vtrack != nil {
+	if vtrack := stream.Meta().FindFirstVideoTrack(); vtrack != nil {
 		view = NewView(win, ctx, vtrack.DisplayWidth, vtrack.DisplayHeight)
 	} else {
 		view = NewView(win, ctx, 0, 0)
 	}
 
 	// consume video stream
-	if vDec != nil {
-		go vDec.Process(vOut)
+	if stream.VDecoder() != nil {
+		go stream.VDecoder().Process(vOut)
 		go func() {
 			var start time.Time
-			for frame := range vOut {
-				if start.IsZero() {
-					start = time.Now()
+			for {
+				var frame Frame
+				select {
+				case f, ok := <-vOut:
+					if !ok {
+						return
+					}
+					if start.IsZero() {
+						start = time.Now()
+					}
+					frame = f
+				case d := <-stream.Rebase():
+					start = time.Now().Add(-d)
+					continue
 				}
 				if d := time.Now().Sub(start); d < frame.Timecode {
 					time.Sleep(frame.Timecode - d)
+				} else if (d - frame.Timecode) > rateLimitDur {
+					// log.Println("dropping", (d - frame.Timecode), ">", rateLimitDur)
+					continue
 				}
 				view.ShowFrame(&frame)
-				log.Printf("video frame @ %v bounds = %v", frame.Timecode, frame.Rect)
+				// log.Printf("video frame @ %v bounds = %v", frame.Timecode, frame.Rect)
 			}
 		}()
 	}
 
 	// consume audio stream
-	if aDec != nil {
-		go aDec.Process(aOut)
+	if stream.ADecoder() != nil {
+		go stream.ADecoder().Process(aOut)
 		go func() {
-			if aDec == nil {
-				return
-			}
-
-			aDec.Process(aOut)
 			for range aOut {
 
 			}

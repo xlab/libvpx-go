@@ -1,39 +1,59 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"time"
 
 	"github.com/ebml-go/webm"
-	"github.com/xlab/closer"
 )
 
-func webmStream(r io.ReadSeeker, seek time.Duration) (meta webm.WebM, v *VDecoder, a *ADecoder) {
-	reader, err := webm.Parse(r, &meta)
-	if err != nil {
-		closer.Fatalln("webm: stream parsing error:", err)
-	}
-	reader.Seek(seek)
+type Stream interface {
+	Meta() *webm.WebM
+	VDecoder() *VDecoder
+	ADecoder() *ADecoder
+	Seek(d time.Duration)
+	Rebase() <-chan time.Duration
+}
 
-	vtrack := meta.FindFirstVideoTrack()
-	atrack := meta.FindFirstAudioTrack()
+type webmStream struct {
+	meta webm.WebM
+	vdec *VDecoder
+	adec *ADecoder
+
+	reader *webm.Reader
+	rebase chan time.Duration
+}
+
+func NewStream(r io.ReadSeeker) (Stream, error) {
+	s := &webmStream{
+		rebase: make(chan time.Duration, 1),
+	}
+	reader, err := webm.Parse(r, &s.meta)
+	if err != nil {
+		err = fmt.Errorf("parse error: %v", err)
+		return nil, err
+	}
+	s.reader = reader
+	vtrack := s.meta.FindFirstVideoTrack()
+	atrack := s.meta.FindFirstAudioTrack()
 	vPackets := make(chan webm.Packet, 64)
 	aPackets := make(chan webm.Packet, 64)
 	if vtrack != nil {
 		log.Printf("webm: found video track: %dx%d dur: %v %s", vtrack.DisplayWidth,
-			vtrack.DisplayHeight, meta.Segment.GetDuration(), vtrack.CodecID)
+			vtrack.DisplayHeight, s.meta.Segment.GetDuration(), vtrack.CodecID)
 
-		v = NewVDecoder(VCodec(vtrack.CodecID), vPackets)
+		s.vdec = NewVDecoder(VCodec(vtrack.CodecID), vPackets)
 	}
 	if atrack != nil {
 		log.Printf("webm: found audio track: ch: %d %.1fHz %d-bit, codec: %s", atrack.Channels,
 			atrack.SamplingFrequency, atrack.BitDepth, atrack.CodecID)
 
-		a = NewADecoder(ACodec(atrack.CodecID), aPackets)
+		s.adec = NewADecoder(ACodec(atrack.CodecID), aPackets)
 	}
 	go func() { // demuxer
-		for pkt := range reader.Chan {
+		for pkt := range s.reader.Chan {
 			switch {
 			case vtrack == nil:
 				aPackets <- pkt // audio only
@@ -50,7 +70,28 @@ func webmStream(r io.ReadSeeker, seek time.Duration) (meta webm.WebM, v *VDecode
 		}
 		close(vPackets)
 		close(aPackets)
-		reader.Shutdown()
+		s.reader.Shutdown()
 	}()
-	return
+	return s, nil
+}
+
+func (s *webmStream) Meta() *webm.WebM {
+	return &s.meta
+}
+
+func (s *webmStream) VDecoder() *VDecoder {
+	return s.vdec
+}
+
+func (s *webmStream) ADecoder() *ADecoder {
+	return s.adec
+}
+
+func (s *webmStream) Seek(d time.Duration) {
+	s.reader.Seek(d)
+	s.rebase <- d
+}
+
+func (s *webmStream) Rebase() <-chan time.Duration {
+	return s.rebase
 }

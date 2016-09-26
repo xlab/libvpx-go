@@ -66,7 +66,7 @@ func (v *View) ShowFrame(f *Frame) {
 func (v *View) GUILoop(exitC chan struct{}, doneC chan<- struct{}) {
 	defer close(doneC)
 
-	fpsTicker := time.NewTicker(time.Second / 30)
+	fpsTicker := time.NewTicker(rateLimitDur)
 	for {
 		select {
 		case <-exitC:
@@ -104,7 +104,7 @@ func (v *View) nkStep() {
 		v.frameMux.RLock()
 		if v.frame == nil {
 			// Draw logo if no frame yet
-			nk.NkLayoutRowStatic(v.ctx, 500, 500, 1)
+			nk.NkLayoutRowStatic(v.ctx, 200, 200, 1)
 			nk.NkImage(v.ctx, v.bgImg)
 		} else {
 			// Display frame as image
