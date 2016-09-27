@@ -22,7 +22,7 @@ There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audi
 ```bash
 $ brew install glfw3 # >= 3.2
 $ brew install libvpx # >= 1.6
-$ brew install ogg vorbis opus
+$ brew install ogg vorbis opus portaudio
 # (or use your package manager)
 
 $ go get github.com/xlab/libvpx-go/cmd/webm-player
