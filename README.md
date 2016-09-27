@@ -1,13 +1,13 @@
-libvpx-go
-=========
+libvpx-go 1.6.0
+===============
 
-The package provides Go bindings for [libvpx](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
+Package `vpx` provides Go bindings for [libvpx-1.6.0](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
 All the binding code has automatically been generated with rules defined in [vpx.yml](/vpx.yml).
 
 ### Usage
 
 ```bash
-$ brew install libvpx # == 1.6
+$ brew install libvpx # >= 1.6
 # (or use your package manager)
 
 $ go get github.com/xlab/libvpx-go/libvpx
@@ -21,7 +21,7 @@ There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audi
 
 ```bash
 $ brew install glfw3 # >= 3.2
-$ brew install libvpx # == 1.6
+$ brew install libvpx # >= 1.6
 $ brew install ogg vorbis opus
 # (or use your package manager)
 
