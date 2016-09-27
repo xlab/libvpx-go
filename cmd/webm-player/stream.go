@@ -28,7 +28,7 @@ type webmStream struct {
 
 func NewStream(r io.ReadSeeker) (Stream, error) {
 	s := &webmStream{
-		rebase: make(chan time.Duration, 1),
+		rebase: make(chan time.Duration, 10),
 	}
 	reader, err := webm.Parse(r, &s.meta)
 	if err != nil {
@@ -38,8 +38,8 @@ func NewStream(r io.ReadSeeker) (Stream, error) {
 	s.reader = reader
 	vtrack := s.meta.FindFirstVideoTrack()
 	atrack := s.meta.FindFirstAudioTrack()
-	vPackets := make(chan webm.Packet, 64)
-	aPackets := make(chan webm.Packet, 64)
+	vPackets := make(chan webm.Packet, 1)
+	aPackets := make(chan webm.Packet, 1)
 	if vtrack != nil {
 		log.Printf("webm: found video track: %dx%d dur: %v %s", vtrack.DisplayWidth,
 			vtrack.DisplayHeight, s.meta.Segment.GetDuration(), vtrack.CodecID)
@@ -47,10 +47,11 @@ func NewStream(r io.ReadSeeker) (Stream, error) {
 		s.vdec = NewVDecoder(VCodec(vtrack.CodecID), vPackets)
 	}
 	if atrack != nil {
-		log.Printf("webm: found audio track: ch: %d %.1fHz %d-bit, codec: %s", atrack.Channels,
-			atrack.SamplingFrequency, atrack.BitDepth, atrack.CodecID)
+		log.Printf("webm: found audio track: ch: %d %.1fHz, dur: %v, codec: %s", atrack.Channels,
+			atrack.SamplingFrequency, s.meta.Segment.GetDuration(), atrack.CodecID)
 
-		s.adec = NewADecoder(ACodec(atrack.CodecID), aPackets)
+		s.adec = NewADecoder(ACodec(atrack.CodecID), atrack.CodecPrivate,
+			int(atrack.Channels), int(atrack.SamplingFrequency), aPackets)
 	}
 	go func() { // demuxer
 		for pkt := range s.reader.Chan {

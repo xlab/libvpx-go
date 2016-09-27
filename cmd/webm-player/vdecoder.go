@@ -17,9 +17,10 @@ type Frame struct {
 
 type VDecoder struct {
 	enabled bool
-	src     <-chan webm.Packet
-	ctx     *vpx.CodecCtx
-	iface   *vpx.CodecIface
+
+	src   <-chan webm.Packet
+	ctx   *vpx.CodecCtx
+	iface *vpx.CodecIface
 }
 
 type VCodec string

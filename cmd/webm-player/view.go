@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/draw"
 	"image/png"
@@ -17,7 +18,7 @@ import (
 
 const (
 	winWidth  = 800
-	winHeight = 470
+	winHeight = 500
 
 	maxVertexBuffer  = 512 * 1024
 	maxElementBuffer = 128 * 1024
@@ -39,16 +40,26 @@ type View struct {
 	frameTex uint32
 	frameImg nk.Image
 	frameMux *sync.RWMutex
+
+	onPause     func()
+	onSeek      func(d time.Duration)
+	dur         time.Duration
+	pos         time.Duration
+	updatingPos bool
+	vPos        time.Duration // video pos updated by decoder
+	vPosLock    *sync.RWMutex
 }
 
-func NewView(win *glfw.Window, ctx *nk.Context, width, height uint) *View {
+func NewView(win *glfw.Window, ctx *nk.Context, width, height uint, dur time.Duration) *View {
 	v := &View{
 		win:    win,
 		ctx:    ctx,
 		width:  width,
 		height: height,
+		dur:    dur,
 
 		frameMux: new(sync.RWMutex),
+		vPosLock: new(sync.RWMutex),
 	}
 	imgMap := loadImages(assetBg)
 	if bgImg, ok := imgMap[assetBg]; ok {
@@ -87,6 +98,8 @@ func (v *View) GUILoop(exitC chan struct{}, doneC chan<- struct{}) {
 
 var windowName = s("view")
 
+const panelHeight = 30
+
 func (v *View) nkStep() {
 	var width, height int32
 	glfw.GetWindowSize(v.win, &width, &height)
@@ -94,12 +107,12 @@ func (v *View) nkStep() {
 
 	// Layout
 	panel := nk.NewPanel()
-	viewWidth, viewHeight := letterbox(float32(v.width), float32(v.height),
-		float32(width)-20, float32(height)-20)
-	bounds := nk.NkRect(10, 10, viewWidth, viewHeight+10)
+	bounds := nk.NkRect(0, 0, float32(width), float32(height))
 	if nk.NkBegin(v.ctx, panel, windowName, bounds, nk.WindowNoScrollbar) > 0 {
 		nk.NkWindowSetBounds(v.ctx, bounds)
 		nk.NkWindowCollapse(v.ctx, windowName, nk.Maximized)
+		viewWidth, viewHeight := letterbox(float32(v.width), float32(v.height),
+			float32(width), float32(height)-panelHeight)
 
 		v.frameMux.RLock()
 		if v.frame == nil {
@@ -113,6 +126,11 @@ func (v *View) nkStep() {
 			nk.NkImage(v.ctx, v.frameImg)
 		}
 		v.frameMux.RUnlock()
+
+		nk.NkLayoutRow(v.ctx, nk.Dynamic, 30, 2, []float32{0.85, 0.15})
+		vPos, curPos, maxPos := v.getPos()
+		v.makeSlider(v.ctx, vPos, curPos, maxPos)
+		nk.NkLabel(v.ctx, v.time(), nk.TextAlignCentered)
 	}
 	nk.NkEnd(v.ctx)
 
@@ -122,6 +140,65 @@ func (v *View) nkStep() {
 	gl.ClearColor(0, 0, 0, 255)
 	nk.NkGLFW3Render(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
 	glfw.SwapBuffers(v.win)
+}
+
+func (v *View) time() string {
+	return fmt.Sprintf("%v/%v\x00", v.pos, v.dur)
+}
+
+func (v *View) makeSlider(ctx *nk.Context, vPos, curPos, maxPos int32) {
+	if !v.updatingPos {
+		curPos = vPos
+	}
+	value := nk.NkSlideInt(v.ctx, 0, curPos, maxPos, 1)
+	if value == 0 {
+		return
+	}
+	if v.updatingPos && nk.NkInputIsMouseDown(v.ctx.Input(), 0) == 0 {
+		v.updatingPos = false
+		if v.onSeek != nil {
+			v.onSeek(v.pos)
+		}
+	}
+	v.setPos(time.Duration(value) * time.Second)
+	if nk.NkInputIsMouseDown(v.ctx.Input(), 0) > 0 {
+		v.updatingPos = true
+	}
+}
+
+func (v *View) SetOnPause(fn func()) {
+	v.onPause = fn
+}
+
+func (v *View) SetOnSeek(fn func(d time.Duration)) {
+	v.onSeek = fn
+}
+
+func (v *View) UpdatePos(d time.Duration) {
+	v.vPosLock.Lock()
+	v.vPos = d
+	v.vPosLock.Unlock()
+}
+
+func (v *View) setPos(d time.Duration) bool {
+	if d > v.dur {
+		v.pos = v.dur
+		return false
+	}
+	if d != v.pos {
+		v.pos = d
+		return true
+	}
+	return false
+}
+
+func (v *View) getPos() (vPos, curPos, maxPos int32) {
+	v.vPosLock.RLock()
+	vPos = int32(v.vPos / time.Second)
+	v.vPosLock.RUnlock()
+	maxPos = int32(v.dur / time.Second)
+	curPos = int32(v.pos / time.Second)
+	return
 }
 
 func letterbox(contentW, contentH float32, boxW, boxH float32) (float32, float32) {
