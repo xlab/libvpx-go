@@ -1,19 +1,73 @@
 libvpx-go
 =========
 
-**WARNING:** WIP; UNTESTED
-
 The package provides Go bindings for [libvpx](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
 All the binding code has automatically been generated with rules defined in [vpx.yml](/vpx.yml).
 
 ### Usage
 
-```
-$ brew install libvpx
-(or use your package manager)
+```bash
+$ brew install libvpx # == 1.6
+# (or use your package manager)
 
 $ go get github.com/xlab/libvpx-go/libvpx
 ```
+
+### Demo
+
+There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio implemnted, see [cmd/webm-player](cmd/webm-player). To get videos to play you can use [youtube-dl](https://github.com/rg3/youtube-dl) tool that is very convenient. It supports all the formats that are in WebM container, the player woudl automatically find video andaudio streams in a single file or in both (only video + only audio), see usage examples below.
+
+#### Installation
+
+```bash
+$ brew install glfw3 # >= 3.2
+$ brew install libvpx # == 1.6
+$ brew install ogg vorbis opus
+# (or use your package manager)
+
+$ go get github.com/xlab/libvpx-go/cmd/webm-player
+
+$ webm-player -h
+A simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio. Version: v1.0rc1
+
+Usage: webm-player <file1.webm> [file2.webm]
+```
+
+#### Usage
+
+Please keep in mind that this is a **VP8/VP9 demo**, yet through it does audio decoding well too. Video frames are converted to RGBA using a software decoder (a function), moving that to GPU would give it a boost for 720p+ resolutions, but this is left as an excercise for you, pull requests are welcome. Also audio synchronisation is poor, I invested a couple of hours but I'm lazy to get it done right. Also no pause button, sorry.
+
+```bash
+$ youtube-dl -F w2DpLW374Sg # list all formats
+$ youtube-dl -f 247 w2DpLW374Sg # webm 1280x720 vp9, 30fps, video only, 71.90MiB
+$ youtube-dl -f 251 w2DpLW374Sg # webm audio only, opus @160k (48000Hz), 8.92MiB
+
+$ webm-player ~/Downloads/w2DpLW374Sg.webm ~/Downloads/w2DpLW374Sg_opus.webm
+2016/09/27 21:43:38 glfw: created window 800x500
+2016/09/27 21:43:38 webm: found video track: 1280x720 dur: 9m54s V_VP9
+2016/09/27 21:43:38 webm: found audio track: ch: 2 48000.0Hz, dur: 9m54s, codec: A_OPUS
+2016/09/27 21:43:38 [INFO] took Video from the first stream, Audio from the second
+```
+
+<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><img alt="webm player golang 8bit" src="assets/demo2.png" width="800px"/></a>
+
+
+```bash
+$ youtube-dl -f 43 5kj5ApnhPAE # webm  640x360   medium , vp8.0,  vorbis@128k
+
+$ webm-player ~/Downloads/5kj5ApnhPAE.webm
+2016/09/27 21:40:43 glfw: created window 800x500
+2016/09/27 21:40:43 webm: found video track: 640x360 dur: 12m30s V_VP8
+2016/09/27 21:40:43 webm: found audio track: ch: 1 44100.0Hz, dur: 12m30s, codec: A_VORBIS
+```
+
+<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><img alt="webm player golang rob" src="assets/demo1.png" width="800px"/></a>
+
+#### FAQ
+
+> Does it support rick roll?
+
+Yes, it does.
 
 ### Rebuilding the package
 
