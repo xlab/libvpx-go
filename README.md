@@ -1,5 +1,5 @@
-libvpx-go 1.6.0
-===============
+libvpx-go [![GoDoc](https://godoc.org/github.com/xlab/libvpx-go/vpx?status.svg)](https://godoc.org/github.com/xlab/libvpx-go/vpx)
+=========
 
 Package `vpx` provides Go bindings for [libvpx-1.6.0](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
 All the binding code has automatically been generated with rules defined in [vpx.yml](/vpx.yml).
