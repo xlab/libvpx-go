@@ -21,6 +21,7 @@ TRANSLATOR:
   MemTips:
     - {target: _codec_stream_info, self: bind}
     - {target: _image, self: bind}
+    - {target: _svc_, self: raw}
     - {target: _codec_ctx, self: raw}
   PtrTips:
     function:
