@@ -11,7 +11,7 @@ import (
 	"unsafe"
 
 	"github.com/go-gl/gl/v2.1/gl"
-	"github.com/golang-ui/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/closer"
 )
@@ -35,36 +35,35 @@ func init() {
 }
 
 func main() {
-	defer closer.Close()
+	// defer closer.Close()
 	closer.Bind(func() {
 		log.Println("Bye!")
 	})
 
 	// Init GUI
-	glfw.SetErrorCallback(onError)
-	if ok := b(glfw.Init()); !ok {
-		closer.Fatalln("glfw: init failed")
+	if err := glfw.Init(); err != nil {
+		closer.Fatalln(err)
 	}
 	glfw.WindowHint(glfw.ContextVersionMajor, 3)
 	glfw.WindowHint(glfw.ContextVersionMinor, 3)
-	glfw.WindowHint(glfw.OpenglProfile, glfw.OpenglCoreProfile)
-	glfw.WindowHint(glfw.OpenglForwardCompat, glfw.True)
-	win := glfw.CreateWindow(winWidth, winHeight, s(appName), nil, nil)
-	if win == nil {
-		closer.Fatalln("glfw: window creation failed")
+	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
+	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+	win, err := glfw.CreateWindow(winWidth, winHeight, s(appName), nil, nil)
+	if err != nil {
+		closer.Fatalln(err)
 	}
-	glfw.MakeContextCurrent(win)
+	win.MakeContextCurrent()
 
-	var width, height int32
-	glfw.GetWindowSize(win, &width, &height)
+	width, height := win.GetSize()
 	log.Printf("glfw: created window %dx%d", width, height)
 
 	if err := gl.Init(); err != nil {
 		closer.Fatalln("opengl: init failed:", err)
 	}
-	gl.Viewport(0, 0, width, height)
+	gl.Viewport(0, 0, int32(width), int32(height))
 
-	ctx := nk.NkGLFW3Init((*nk.GLFWwindow)(unsafe.Pointer(win)), nk.GLFW3InstallCallbacks)
+	glfwWindow := unsafe.Pointer(win.GLFWWindow())
+	ctx := nk.NkGLFW3Init((*nk.GLFWwindow)(glfwWindow), nk.GLFW3InstallCallbacks)
 	atlas := nk.NewFontAtlas()
 	nk.NkGLFW3FontStashBegin(&atlas)
 	sansFont := nk.NkFontAtlasAddFromFile(atlas, s("assets/FreeSans.ttf"), 18, nil)
@@ -239,8 +238,4 @@ func discoverStreams(streams ...io.ReadSeeker) (Stream, Stream) {
 		log.Println("[INFO] neither of Video or Audio found")
 		return nil, nil
 	}
-}
-
-func onError(code int32, msg string) {
-	log.Printf("[glfw ERR]: error %d: %s", code, msg)
 }

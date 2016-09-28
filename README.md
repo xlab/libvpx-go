@@ -37,11 +37,11 @@ Usage: webm-player <file1.webm> [file2.webm]
 
 There is a list of libraries used to build this app:
 
-* [GLFW 3.2](https://github.com/golang-ui/glfw) — Go bindings for multi-platform library for OpenGL, OpenGL ES and Vulkan development, used here to init the GL context, window and handle the input events;
-* [Nuklear](https://github.com/golang-ui/nuklear) — Go bindings for [nuklear.h](https://github.com/vurtun/nuklear) — a small ANSI C GUI library, used here to build the GUI layout, display the video frame as image, handle events sent by GLFW;
+* [go-gl/glfw](http://github.com/go-gl/glfw) — Go bindings for multi-platform library for OpenGL, OpenGL ES and Vulkan development, used here to init the GL context, window and handle the input events;
+* [golang-ui/nuklear](https://github.com/golang-ui/nuklear) — Go bindings for [nuklear.h](https://github.com/vurtun/nuklear) — a small ANSI C GUI library, used here to build the GUI layout, display the video frame as image, handle events sent by GLFW;
 * [ebml-go/ebml](https://github.com/ebml-go/ebml) — a pure Go implementation of an [EBML](http://matroska-org.github.io/libebml/specs.html) decoder (by Jorge Acereda Macia);
 * [ebml-go/webm](https://github.com/ebml-go/webm) — a pure Go implementation of a parser, reader and seeker for [WebM container](http://www.webmproject.org/docs/container/), uses EBML to decode the WebM metadata (by Jorge Acereda Macia);
-* [libVPX](https://github.com/xlab/libvpx-go) — Go bindings for libvpx-1.6.0, the WebM Project VP8/VP9 codec implementation;
+* [libvpx](https://github.com/xlab/libvpx-go) — Go bindings for libvpx-1.6.0, the WebM Project VP8/VP9 codec implementation;
 * [vorbis](https://github.com/xlab/vorbis-go) — Go bindings for OggVorbis implementation by the Xiph.Org Foundation;
 * [opus](https://github.com/xlab/opus-go) — Go bindings for Opus implementation by the Xiph.Org Foundation;
 * [portaudio](https://github.com/xlab/portaudio-go) — Go bindings for PortAudio, a free, cross-platform, open-source, audio I/O library.

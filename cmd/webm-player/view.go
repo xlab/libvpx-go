@@ -12,7 +12,7 @@ import (
 	"unsafe"
 
 	"github.com/go-gl/gl/v2.1/gl"
-	"github.com/golang-ui/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 )
 
@@ -86,7 +86,7 @@ func (v *View) GUILoop(exitC chan struct{}, doneC chan<- struct{}) {
 			fpsTicker.Stop()
 			return
 		case <-fpsTicker.C:
-			if b(glfw.WindowShouldClose(v.win)) {
+			if v.win.ShouldClose() {
 				exitC <- struct{}{}
 				continue
 			}
@@ -101,8 +101,7 @@ var windowName = s("view")
 const panelHeight = 30
 
 func (v *View) nkStep() {
-	var width, height int32
-	glfw.GetWindowSize(v.win, &width, &height)
+	width, height := v.win.GetSize()
 	nk.NkGLFW3NewFrame()
 
 	// Layout
@@ -135,11 +134,11 @@ func (v *View) nkStep() {
 	nk.NkEnd(v.ctx)
 
 	// Render
-	gl.Viewport(0, 0, width, height)
+	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(0, 0, 0, 255)
 	nk.NkGLFW3Render(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
-	glfw.SwapBuffers(v.win)
+	v.win.SwapBuffers()
 }
 
 func (v *View) time() string {
