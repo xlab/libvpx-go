@@ -91,3 +91,7 @@ $ git clone https://github.com/xlab/libvpx-go && cd libvpx-go
 $ make clean
 $ make
 ```
+
+## License
+
+All the code except when stated otherwise is licensed under the MIT license.
