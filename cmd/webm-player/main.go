@@ -85,8 +85,8 @@ func main() {
 		}
 	}
 	stream1, stream2 := discoverStreams(streams...)
-	vOut := make(chan Frame, 1)
-	aOut := make(chan Samples, 1)
+	vOut := make(chan Frame, 32)
+	aOut := make(chan Samples, 32)
 	if stream1 == nil {
 		closer.Fatalln("[ERR] nothing to play")
 	}

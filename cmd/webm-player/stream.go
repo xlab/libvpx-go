@@ -38,8 +38,8 @@ func NewStream(r io.ReadSeeker) (Stream, error) {
 	s.reader = reader
 	vtrack := s.meta.FindFirstVideoTrack()
 	atrack := s.meta.FindFirstAudioTrack()
-	vPackets := make(chan webm.Packet, 1)
-	aPackets := make(chan webm.Packet, 1)
+	vPackets := make(chan webm.Packet, 32)
+	aPackets := make(chan webm.Packet, 32)
 	if vtrack != nil {
 		log.Printf("webm: found video track: %dx%d dur: %v %s", vtrack.DisplayWidth,
 			vtrack.DisplayHeight, s.meta.Segment.GetDuration(), vtrack.CodecID)
