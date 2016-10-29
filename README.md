@@ -17,7 +17,9 @@ $ go get github.com/xlab/libvpx-go/libvpx
 
 There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio implemnted, see [cmd/webm-player](cmd/webm-player). To get videos to play you can use [youtube-dl](https://github.com/rg3/youtube-dl) tool that is very convenient. It supports all the formats that are in WebM container, the player woudl automatically find video andaudio streams in a single file or in both (only video + only audio), see usage examples below.
 
-#### Install deps
+#### Install deps (demo app)
+
+See also GLFW for Windows installation guide at [github.com/golang-ui/nuklear](https://github.com/golang-ui/nuklear#installation-of-nk).
 
 ```bash
 $ brew install glfw3 # >= 3.2
@@ -31,6 +33,13 @@ $ webm-player -h
 A simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio. Version: v1.0rc1
 
 Usage: webm-player <file1.webm> [file2.webm]
+```
+
+For Linux (e.g. Debian Sid):
+
+```
+$ apt-get install libglfw3-dev libvpx-dev libogg-dev libvorbis-dev libopus-dev portaudio19-dev
+$ go get github.com/xlab/libvpx-go/cmd/webm-player
 ```
 
 #### Software used
