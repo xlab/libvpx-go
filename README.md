@@ -10,7 +10,7 @@ All the binding code has automatically been generated with rules defined in [vpx
 $ brew install libvpx # >= 1.6
 # (or use your package manager)
 
-$ go get github.com/xlab/libvpx-go/libvpx
+$ go get github.com/xlab/libvpx-go/vpx
 ```
 
 ### Demo application
