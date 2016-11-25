@@ -8,6 +8,7 @@ All the binding code has automatically been generated with rules defined in [vpx
 
 ```bash
 $ brew install libvpx # >= 1.6
+$ brew install pkg-config
 # (or use your package manager)
 
 $ go get github.com/xlab/libvpx-go/vpx
@@ -24,7 +25,7 @@ See also GLFW for Windows installation guide at [github.com/golang-ui/nuklear](h
 ```bash
 $ brew install glfw3 # >= 3.2
 $ brew install libvpx # >= 1.6
-$ brew install ogg vorbis opus portaudio
+$ brew install libogg libvorbis opus portaudio
 # (or use your package manager)
 
 $ go get github.com/xlab/libvpx-go/cmd/webm-player
