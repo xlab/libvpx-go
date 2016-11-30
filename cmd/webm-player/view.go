@@ -105,9 +105,8 @@ func (v *View) nkStep() {
 	nk.NkGLFW3NewFrame()
 
 	// Layout
-	panel := nk.NewPanel()
 	bounds := nk.NkRect(0, 0, float32(width), float32(height))
-	if nk.NkBegin(v.ctx, panel, windowName, bounds, nk.WindowNoScrollbar) > 0 {
+	if nk.NkBegin(v.ctx, windowName, bounds, nk.WindowNoScrollbar) > 0 {
 		nk.NkWindowSetBounds(v.ctx, bounds)
 		nk.NkWindowCollapse(v.ctx, windowName, nk.Maximized)
 		viewWidth, viewHeight := letterbox(float32(v.width), float32(v.height),
