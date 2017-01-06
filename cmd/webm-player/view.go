@@ -11,7 +11,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/go-gl/gl/v2.1/gl"
+	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 )
@@ -81,7 +81,7 @@ func (v *View) GUILoop(exitC chan struct{}, doneC chan<- struct{}) {
 	for {
 		select {
 		case <-exitC:
-			nk.NkGLFW3Shutdown()
+			nk.NkPlatformShutdown()
 			glfw.Terminate()
 			fpsTicker.Stop()
 			return
@@ -102,7 +102,7 @@ const panelHeight = 30
 
 func (v *View) nkStep() {
 	width, height := v.win.GetSize()
-	nk.NkGLFW3NewFrame()
+	nk.NkPlatformNewFrame()
 
 	// Layout
 	bounds := nk.NkRect(0, 0, float32(width), float32(height))
@@ -136,7 +136,7 @@ func (v *View) nkStep() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(0, 0, 0, 255)
-	nk.NkGLFW3Render(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
+	nk.NkPlatformRender(nk.AntiAliasingOn, maxVertexBuffer, maxElementBuffer)
 	v.win.SwapBuffers()
 }
 

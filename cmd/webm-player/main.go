@@ -8,9 +8,8 @@ import (
 	"os"
 	"runtime"
 	"time"
-	"unsafe"
 
-	"github.com/go-gl/gl/v2.1/gl"
+	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/nuklear/nk"
 	"github.com/xlab/closer"
@@ -44,10 +43,10 @@ func main() {
 	if err := glfw.Init(); err != nil {
 		closer.Fatalln(err)
 	}
-	glfw.WindowHint(glfw.ContextVersionMajor, 2)
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	// glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile) // requires >= 3.2
-	// glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True) // requires >= 3.0
+	glfw.WindowHint(glfw.ContextVersionMajor, 3)
+	glfw.WindowHint(glfw.ContextVersionMinor, 2)
+	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
+	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 	win, err := glfw.CreateWindow(winWidth, winHeight, s(appName), nil, nil)
 	if err != nil {
 		closer.Fatalln(err)
@@ -62,12 +61,11 @@ func main() {
 	}
 	gl.Viewport(0, 0, int32(width), int32(height))
 
-	glfwWindow := unsafe.Pointer(win.GLFWWindow())
-	ctx := nk.NkGLFW3Init((*nk.GLFWwindow)(glfwWindow), nk.GLFW3InstallCallbacks)
+	ctx := nk.NkPlatformInit(win, nk.PlatformInstallCallbacks)
 	atlas := nk.NewFontAtlas()
-	nk.NkGLFW3FontStashBegin(&atlas)
+	nk.NkFontStashBegin(&atlas)
 	sansFont := nk.NkFontAtlasAddFromFile(atlas, s("assets/FreeSans.ttf"), 18, nil)
-	nk.NkGLFW3FontStashEnd()
+	nk.NkFontStashEnd()
 	if sansFont != nil {
 		nk.NkStyleSetFont(ctx, sansFont.Handle())
 	}
