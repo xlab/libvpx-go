@@ -23,7 +23,6 @@ There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audi
 See also GLFW for Windows installation guide at [github.com/golang-ui/nuklear](https://github.com/golang-ui/nuklear#installation-of-nk).
 
 ```bash
-$ brew install --without-shared-library glfw3 # >= 3.2
 $ brew install libvpx # >= 1.6
 $ brew install libogg libvorbis opus portaudio
 # (or use your package manager)
@@ -39,7 +38,7 @@ Usage: webm-player <file1.webm> [file2.webm]
 For Linux (e.g. Debian Sid):
 
 ```
-$ apt-get install libglfw3-dev libvpx-dev libogg-dev libvorbis-dev libopus-dev portaudio19-dev
+$ apt-get install libvpx-dev libogg-dev libvorbis-dev libopus-dev portaudio19-dev
 $ go get github.com/xlab/libvpx-go/cmd/webm-player
 ```
 
