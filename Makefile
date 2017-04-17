@@ -1,5 +1,5 @@
 all:
-	cgogen vpx.yml
+	c-for-go -ccdefs vpx.yml
 
 clean:
 	rm -f vpx/cgo_helpers.go vpx/cgo_helpers.h vpx/cgo_helpers.c
