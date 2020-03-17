@@ -71,8 +71,6 @@ func (img *Image) ImageYCbCr() *image.YCbCr {
 	case ImageFormatI422, ImageFormatI42216:
 		subsampleRatio = image.YCbCrSubsampleRatio422
 		csz = csz / 2
-	case ImageFormatI444, ImageFormat444a, ImageFormatI44416:
-		subsampleRatio = image.YCbCrSubsampleRatio444
 	case ImageFormatI440, ImageFormatI44016:
 		subsampleRatio = image.YCbCrSubsampleRatio440
 	}

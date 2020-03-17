@@ -178,32 +178,16 @@ type ImageFormat int32
 
 // ImageFormat enumeration from vpx-1.6.0/vpx_image.h:67
 const (
-	ImageFormatNone     ImageFormat = C.VPX_IMG_FMT_NONE
-	ImageFormatRgb24    ImageFormat = C.VPX_IMG_FMT_RGB24
-	ImageFormatRgb32    ImageFormat = C.VPX_IMG_FMT_RGB32
-	ImageFormatRgb565   ImageFormat = C.VPX_IMG_FMT_RGB565
-	ImageFormatRgb555   ImageFormat = C.VPX_IMG_FMT_RGB555
-	ImageFormatUyvy     ImageFormat = C.VPX_IMG_FMT_UYVY
-	ImageFormatYuy2     ImageFormat = C.VPX_IMG_FMT_YUY2
-	ImageFormatYvyu     ImageFormat = C.VPX_IMG_FMT_YVYU
-	ImageFormatBgr24    ImageFormat = C.VPX_IMG_FMT_BGR24
-	ImageFormatRgb32Le  ImageFormat = C.VPX_IMG_FMT_RGB32_LE
-	ImageFormatArgb     ImageFormat = C.VPX_IMG_FMT_ARGB
-	ImageFormatArgbLe   ImageFormat = C.VPX_IMG_FMT_ARGB_LE
-	ImageFormatRgb565Le ImageFormat = C.VPX_IMG_FMT_RGB565_LE
-	ImageFormatRgb555Le ImageFormat = C.VPX_IMG_FMT_RGB555_LE
-	ImageFormatYv12     ImageFormat = C.VPX_IMG_FMT_YV12
-	ImageFormatI420     ImageFormat = C.VPX_IMG_FMT_I420
-	ImageFormatVpxyv12  ImageFormat = C.VPX_IMG_FMT_VPXYV12
-	ImageFormatVpxi420  ImageFormat = C.VPX_IMG_FMT_VPXI420
-	ImageFormatI422     ImageFormat = C.VPX_IMG_FMT_I422
-	ImageFormatI444     ImageFormat = C.VPX_IMG_FMT_I444
-	ImageFormatI440     ImageFormat = C.VPX_IMG_FMT_I440
-	ImageFormat444a     ImageFormat = C.VPX_IMG_FMT_444A
-	ImageFormatI42016   ImageFormat = C.VPX_IMG_FMT_I42016
-	ImageFormatI42216   ImageFormat = C.VPX_IMG_FMT_I42216
-	ImageFormatI44416   ImageFormat = C.VPX_IMG_FMT_I44416
-	ImageFormatI44016   ImageFormat = C.VPX_IMG_FMT_I44016
+	ImageFormatNone   ImageFormat = C.VPX_IMG_FMT_NONE
+	ImageFormatYv12   ImageFormat = C.VPX_IMG_FMT_YV12
+	ImageFormatI420   ImageFormat = C.VPX_IMG_FMT_I420
+	ImageFormatI422   ImageFormat = C.VPX_IMG_FMT_I422
+	ImageFormatI444   ImageFormat = C.VPX_IMG_FMT_I444
+	ImageFormatI440   ImageFormat = C.VPX_IMG_FMT_I440
+	ImageFormatI42016 ImageFormat = C.VPX_IMG_FMT_I42016
+	ImageFormatI42216 ImageFormat = C.VPX_IMG_FMT_I42216
+	ImageFormatI44416 ImageFormat = C.VPX_IMG_FMT_I44416
+	ImageFormatI44016 ImageFormat = C.VPX_IMG_FMT_I44016
 )
 
 // ColorSpace as declared in vpx-1.6.0/vpx_image.h:79
