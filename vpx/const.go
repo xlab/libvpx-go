@@ -31,7 +31,7 @@ const (
 	// SsDefaultLayers as defined in vpx-1.6.0/vpx_encoder.h:55
 	SsDefaultLayers = 1
 	// EncoderABIVersion as defined in vpx-1.6.0/vpx_encoder.h:65
-	EncoderABIVersion = 12
+	EncoderABIVersion = 14 + CodecABIVersion
 	// CodecCapPsnr as defined in vpx-1.6.0/vpx_encoder.h:77
 	CodecCapPsnr = 65536
 	// CodecCapOutputPartition as defined in vpx-1.6.0/vpx_encoder.h:84
@@ -65,13 +65,13 @@ const (
 	// DlBestQuality as defined in vpx-1.6.0/vpx_encoder.h:902
 	DlBestQuality = 0
 	// CodecABIVersion as defined in vpx-1.6.0/vpx_codec.h:86
-	CodecABIVersion = 7
+	CodecABIVersion = 4 + ImageABIVersion
 	// CodecCapDecoder as defined in vpx-1.6.0/vpx_codec.h:154
 	CodecCapDecoder = 1
 	// CodecCapEncoder as defined in vpx-1.6.0/vpx_codec.h:155
 	CodecCapEncoder = 2
 	// ImageABIVersion as defined in vpx-1.6.0/vpx_image.h:31
-	ImageABIVersion = 4
+	ImageABIVersion = 5
 	// ImageFormatPlanar as defined in vpx-1.6.0/vpx_image.h:34
 	ImageFormatPlanar = 256
 	// ImageFormatUvFlip as defined in vpx-1.6.0/vpx_image.h:35
@@ -91,7 +91,7 @@ const (
 	// PlaneAlpha as defined in vpx-1.6.0/vpx_image.h:115
 	PlaneAlpha = 3
 	// DecoderABIVersion as defined in vpx-1.6.0/vpx_decoder.h:43
-	DecoderABIVersion = 10
+	DecoderABIVersion = 3 + CodecABIVersion
 	// CodecCapPutSlice as defined in vpx-1.6.0/vpx_decoder.h:53
 	CodecCapPutSlice = 65536
 	// CodecCapPutFrame as defined in vpx-1.6.0/vpx_decoder.h:54
