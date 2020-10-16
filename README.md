@@ -1,13 +1,13 @@
 libvpx-go [![GoDoc](https://godoc.org/github.com/xlab/libvpx-go/vpx?status.svg)](https://godoc.org/github.com/xlab/libvpx-go/vpx)
 =========
 
-Package `vpx` provides Go bindings for [libvpx-1.6.0](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
+Package `vpx` provides Go bindings for [libvpx-1.8.0](http://www.webmproject.org/code/), the WebM Project VPx codec implementation.
 All the binding code has automatically been generated with rules defined in [vpx.yml](/vpx.yml).
 
 ### Usage
 
 ```bash
-$ brew install libvpx # >= 1.6
+$ brew install libvpx # >= 1.8
 $ brew install pkg-config
 # (or use your package manager)
 
@@ -23,7 +23,7 @@ There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audi
 See also GLFW for Windows installation guide at [github.com/golang-ui/nuklear](https://github.com/golang-ui/nuklear#installation-of-nk).
 
 ```bash
-$ brew install libvpx # >= 1.6
+$ brew install libvpx # >= 1.8
 $ brew install libogg libvorbis opus portaudio
 # (or use your package manager)
 
@@ -50,7 +50,7 @@ There is a list of libraries used to build this app:
 * [golang-ui/nuklear](https://github.com/golang-ui/nuklear) — Go bindings for [nuklear.h](https://github.com/vurtun/nuklear) — a small ANSI C GUI library, used here to build the GUI layout, display the video frame as image, handle events sent by GLFW;
 * [ebml-go/ebml](https://github.com/ebml-go/ebml) — a pure Go implementation of an [EBML](http://matroska-org.github.io/libebml/specs.html) decoder (by Jorge Acereda Macia);
 * [ebml-go/webm](https://github.com/ebml-go/webm) — a pure Go implementation of a parser, reader and seeker for [WebM container](http://www.webmproject.org/docs/container/), uses EBML to decode the WebM metadata (by Jorge Acereda Macia);
-* [libvpx](https://github.com/xlab/libvpx-go) — Go bindings for libvpx-1.6.0, the WebM Project VP8/VP9 codec implementation;
+* [libvpx](https://github.com/xlab/libvpx-go) — Go bindings for libvpx-1.8.0, the WebM Project VP8/VP9 codec implementation;
 * [vorbis](https://github.com/xlab/vorbis-go) — Go bindings for OggVorbis implementation by the Xiph.Org Foundation;
 * [opus](https://github.com/xlab/opus-go) — Go bindings for Opus implementation by the Xiph.Org Foundation;
 * [portaudio](https://github.com/xlab/portaudio-go) — Go bindings for PortAudio, a free, cross-platform, open-source, audio I/O library.
