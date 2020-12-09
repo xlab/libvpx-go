@@ -16,7 +16,7 @@ $ go get github.com/xlab/libvpx-go/vpx
 
 ### Demo application
 
-There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio implemnted, see [cmd/webm-player](cmd/webm-player). To get videos to play you can use [youtube-dl](https://github.com/rg3/youtube-dl) tool that is very convenient. It supports all the formats that are in WebM container, the player woudl automatically find video andaudio streams in a single file or in both (only video + only audio), see usage examples below.
+There is a simple WebM player with support of VP8/VP9 video and Vorbis/Opus audio implemnted, see [cmd/webm-player](cmd/webm-player). To get videos to play you can use [youtube-dl](https://github.com/rg3/youtube-dl) tool that is very convenient. It supports all the formats that are in WebM container, the player would automatically find video andaudio streams in a single file or in both (only video + only audio), see usage examples below.
 
 #### Install deps (demo app)
 
